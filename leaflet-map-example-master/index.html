@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Leaflet Example</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Load Leaflet: http://leafletjs.com/ -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin=""></script>
+
+    <!-- Esri Leaflet Plugin: https://esri.github.io/esri-leaflet/ -->
+    <script src="https://unpkg.com/esri-leaflet@2.1.3/dist/esri-leaflet.js" integrity="sha512-pijLQd2FbV/7+Jwa86Mk3ACxnasfIMzJRrIlVQsuPKPCfUBCDMDUoLiBQRg7dAQY6D1rkmCcR8286hVTn/wlIg==" crossorigin=""></script>
+
+    <!-- ESRI Renderer Plugin: https://github.com/Esri/esri-leaflet-renderers -->
+    <!-- Renders feature layer using default symbology as defined by ArcGIS REST service -->
+    <!-- Currently doesn't work with ESRI cluster plugin -->
+    <script src="https://unpkg.com/esri-leaflet-renderers@2.0.6/dist/esri-leaflet-renderers.js" integrity="sha512-mhpdD3igvv7A/84hueuHzV0NIKFHmp2IvWnY5tIdtAHkHF36yySdstEVI11JZCmSY4TCvOkgEoW+zcV/rUfo0A==" crossorigin=""></script>
+
+    <!-- Load Leaflet Basemap Providers: https://github.com/leaflet-extras/leaflet-providers -->
+    <!-- Modified to include USGS TNM web services -->
+    <script src="JS/leaflet-providers.js"></script>
+
+    <!-- 2.5D OSM Buildings Classic: https://github.com/kekscom/osmbuildings -->
+    <script src="https://cdn.osmbuildings.org/OSMBuildings-Leaflet.js"></script>
+
+    <!-- Load Font Awesome icons -->
+    <script src="https://use.fontawesome.com/a64989e3a8.js"></script>
+
+    <!-- Grouped Layer Plugin: https://github.com/ismyrnow/leaflet-groupedlayercontrol  -->
+    <link rel="stylesheet" href="CSS/leaflet.groupedlayercontrol.min.css">
+    <script src="JS/leaflet.groupedlayercontrol.min.js" type="text/javascript"></script>
+
+    <!-- Overview mini map Plugin: https://github.com/Norkart/Leaflet-MiniMap -->
+    <link rel="stylesheet" href="CSS/Control.MiniMap.css">
+    <script src="JS/Control.MiniMap.min.js" type="text/javascript"></script>
+
+    <!-- Leaflet Drawing Plugin: https://github.com/codeofsumit/leaflet.pm -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.css">
+    <script src="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.min.js"></script>
+
+    <!-- Leaflet WMS Plugin: https://github.com/heigeo/leaflet.wms -->
+    <script src="JS/leaflet.wms.js"></script>
+
+    <!-- Logo Credit Plugin: https://github.com/gregallensworth/L.Control.Credits -->
+    <link rel="stylesheet" href="CSS/leaflet-control-credits.css" />
+    <script type="text/javascript" src="JS/leaflet-control-credits.js"></script>
+
+    <link rel="stylesheet" href="dist/leaflet-routing-machine.css" />
+    <script type="text/javascript" src="dist/leaflet-routing-machine.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        html,
+        body,
+        #map {
+            height: 100%;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map', {
+            center: [19.221, 72.852], 
+            zoom: 16
+        });
+
+        var clusters = [
+            [19.140521,72.923311],
+            [19.140521,72.923311],
+            [19.208877,72.820837],
+            [19.019264,72.831002],
+            [19.039875,72.865698],
+            [19.109921,72.912316],
+            [19.195270,72.844727],
+            [19.048356,72.909541],
+            [19.263568,72.929003],
+            [19.091421,72.906673],
+            [19.179141,72.842674],
+            [19.173333,72.865444],
+            [19.223436,72.853113],
+            [19.137777,72.832632],
+            [19.103368,72.843554],
+            [19.186078,72.831248],
+            [19.228146,72.811937],
+            [19.164258,72.848596],
+            [19.011394,72.837714],
+            [19.086722,72.832989],
+            [19.257689,72.851173],
+            [19.178126,72.850365],
+            [19.150583,72.860906],
+            [19.130455,72.903231],
+            [19.020279,72.847235],
+            [19.287430,72.888530],
+            [19.241078,72.861414],
+            [19.065448,72.922438],
+            [19.073423,72.845503],
+            [19.096083,72.871998],
+            [18.972602,72.821620],
+            [19.290448,72.928481],
+            [19.235565,72.839954],
+            [19.276802,72.916214],
+            [18.959141,72.806279],
+            [19.025764,72.861921],
+            [19.115728,72.860995],
+            [18.962467,72.818421]
+        ];
+
+
+
+        var defaultBase = L.tileLayer.provider('Thunderforest.MobileAtlas').addTo(map);
+
+        var baseLayers = {
+            'Thunderforest': defaultBase,
+            'Stamen Toner': L.tileLayer.provider('Stamen.TonerLite'),
+            'ESRI Imagery': L.tileLayer.provider('Esri.WorldImagery'),
+            'ESRI Ocean Basemap': L.tileLayer.provider('Esri.OceanBasemap'),
+            'OSM Topo': L.tileLayer.provider('OpenTopoMap')
+        };
+
+        //ESRI ArcGIS layers from Hawaii GIS Program; dynamic layer example
+        //Using a relative url to call layer instead of http
+        var WaterQualSites = L.esri.dynamicMapLayer({
+            url: '//geodata.hawaii.gov/arcgis/rest/services/HumanHealthSafety/MapServer',
+            layers: [2],
+            useCors: false
+        });
+
+        //add popup to Water quality sites dynamic map layer
+        WaterQualSites.bindPopup(function(error, featureCollection) {
+            if (error || featureCollection.features.length === 0) {
+                return false;
+            } else {
+                return 'Name: ' + featureCollection.features[0].properties.name + '<br>' + 'ID: ' + featureCollection.features[0].properties.identifier;
+            }
+        });
+
+        //ESRI ArcGIS layers from Hawaii GIS Program; polygon feature layer example
+        //Using a relative url to call layer instead of http
+        var AgBaseline = L.esri.featureLayer({
+            url: '//geodata.hawaii.gov/arcgis/rest/services/LandUseLandCover/MapServer/4',
+            style: function(feature) {
+                return {
+                    fillOpacity: 0.5
+                }
+            }
+        });
+
+        //add popup to AgBaseline feature layer
+        AgBaseline.bindPopup(function(evt) {
+            return L.Util.template('<p>{cropcatego}<br>{island}</p>', evt.feature.properties);
+        });
+
+        //ESRI ArcGIS layers from Hawaii GIS Program; line feature layer example; can override the styling
+        //Using a relative url to call layer
+        var Trails = L.esri.featureLayer({
+            url: '//geodata.hawaii.gov/arcgis/rest/services/Terrestrial/MapServer/34',
+            style: function(feature) {
+                return {
+                    color: '#328000',
+                    weight: 2
+                }
+            }
+        });
+
+        //PacIOOS GeoServer Example; adding a single layer with properties
+        //Using a relative url to call layer instead of http
+        var EconSeaLevRise = L.tileLayer.wms('http://geo.pacioos.hawaii.edu/geoserver/wms?', {
+            layers: 'PACIOOS:hi_tt_all_slrxa_econ_2030',
+            format: 'image/png',
+            opacity: 0.5,
+            tiled: 'true'
+        });
+
+        //Another example using PacIOOS GeoServer examples; setting properties first then add layers     
+        var options = {
+            transparent: 'true',
+            format: 'image/png',
+            opacity: 0.5,
+            tiled: 'true'
+            //info_format: 'text/html'
+        };
+
+        //Using a relative url to call layer instead of http
+        var source = L.WMS.source('http://geo.pacioos.hawaii.edu/geoserver/wms?', options);
+        var CREDREASites = source.getLayer('PACIOOS:hi_cred_all_rea_sites');
+        var VegShoreline = source.getLayer('PACIOOS:hi_hcgg_all_shore_veg');
+
+        //Load OSM Buildings then disable it on first load; can only be viewed at certain scales
+        var osmb = new OSMBuildings(map).load();
+        map.removeLayer(osmb);
+
+        //Overlay grouped layers    
+        var groupOverLays = {
+            "Hawaii State GIS": {
+                "Water Quality Monitoring Sites": WaterQualSites,
+                "Na Ala Hele Trails": Trails,
+                "Agricultural Baseline": AgBaseline
+            },
+
+            "PacIOOS Layers": {
+                "Economic Loss from Sea Level Rise (0.5ft) ": EconSeaLevRise,
+                "CRED REA Sites": CREDREASites,
+                "Vegetation Shoreline": VegShoreline
+            },
+
+            "OSM Bldg Classic": {
+                "2.5D Buildings": osmb
+            }
+        };
+
+        //add layer switch control
+        L.control.groupedLayers(baseLayers, groupOverLays).addTo(map);
+
+
+        //add scale bar to map
+        L.control.scale({
+            position: 'bottomleft'
+        }).addTo(map);
+
+        // Overview mini map
+        var Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+        });
+
+        var miniMap = new L.Control.MiniMap(Esri_WorldTopoMap, {
+            toggleDisplay: true,
+            minimized: false,
+            position: 'bottomleft'
+        }).addTo(map);
+
+        //define Drawing toolbar options
+        var options = {
+            position: 'topleft', // toolbar position, options are 'topleft', 'topright', 'bottomleft', 'bottomright'
+            drawMarker: true, // adds button to draw markers
+            drawPolyline: true, // adds button to draw a polyline
+            drawRectangle: true, // adds button to draw a rectangle
+            drawPolygon: true, // adds button to draw a polygon
+            drawCircle: true, // adds button to draw a cricle
+            cutPolygon: true, // adds button to cut a hole in a polygon
+            editMode: true, // adds button to toggle edit mode for all layers
+            removalMode: true, // adds a button to remove layers
+        };
+
+        // add leaflet.pm controls to the map
+        map.pm.addControls(options);
+
+
+        
+        var control = L.Routing.control({
+            waypoints: [
+            L.latLng(19.221, 72.852),
+            L.latLng(19.258, 72.852)
+            ],
+            routeWhileDragging: true,
+            geocoder: L.Control.Geocoder.nominatim(),
+            routeWhileDragging: true,
+            reverseWaypoints: true,
+            showAlternatives: true,
+            altLineOptions: {
+                styles: [
+                    {color: 'black', opacity: 0.15, weight: 12},
+                    {color: 'white', opacity: 0.8, weight: 8},
+                    {color: 'blue', opacity: 0.5, weight: 8/3}
+                ]
+            },
+            // waypointNameFallback: function(latLng) {
+            //     function zeroPad(n) {
+            //         n = Math.round(n);
+            //         return n < 10 ? '0' + n : n;
+            //     }
+            //     function sexagesimal(p, pos, neg) {
+            //         var n = Math.abs(p),
+            //             degs = Math.floor(n),
+            //             mins = (n - degs) * 60,
+            //             secs = (mins - Math.floor(mins)) * 60,
+            //             frac = Math.round((secs - Math.floor(secs)) * 100);
+            //         return (n >= 0 ? pos : neg) + degs + '°' +
+            //             zeroPad(mins) + '\'' +
+            //             zeroPad(secs) + '.' + zeroPad(frac) + '"';
+            //     }
+
+            //     return sexagesimal(latLng.lat, 'N', 'S') + ' ' + sexagesimal(latLng.lng, 'E', 'W');
+            // }
+        }).addTo(map);
+
+        L.Routing.errorControl(control).addTo(map);
+        
+        for (var i = 0; i < clusters.length; i++) {
+			marker = new L.circle([clusters[i][0],clusters[i][1]], {
+                color: "red",
+            fillColor: "#f03",
+            fillOpacity: 0.5,
+            radius: 300.0
+            }).addTo(map);
+        }
+        // marker = new L.marker([19.103368,72.843554]).addTo(map);
+
+    </script>
+
+</body>
+
+</html>
